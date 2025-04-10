@@ -16,7 +16,7 @@ def list_all_files_and_folders(directory):
 
 
 def main():
-    # Variables
+    os.environ["COOKIECUTTER_FORCE_JSON_PROCESS"] = "1"
     project_slug = "{{ cookiecutter.project_slug }}"
     print(f"Proyecto NestJS generado correctamente en {project_slug}")
     list_all_files_and_folders(os.path.join(os.getcwd()))
