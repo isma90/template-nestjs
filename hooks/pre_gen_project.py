@@ -19,7 +19,7 @@ def main():
     # Variables
     project_slug = "{{ cookiecutter.project_slug }}"
     print(f"Proyecto NestJS generado correctamente en {project_slug}")
-    list_all_files_and_folders(dest_path)
+    list_all_files_and_folders(os.path.join(os.getcwd()))
 
 
 if __name__ == "__main__":
