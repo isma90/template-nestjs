@@ -6,9 +6,12 @@ import json
 def main():
     # Variables
     target_dir = os.path.join(os.getcwd())
-    package_json_path = os.path.join(target_dir, "package.json")
+
 
     # Paso 1: Asegurarse de que el archivo package.json existe
+    package_json_path = os.path.join(target_dir, "package.json")
+
+    # Ahora tu código existente
     if os.path.exists(os.path.join(target_dir, "package.json.jinja2")):
         os.rename("package.json.jinja2", "package.json")
 
@@ -72,7 +75,7 @@ def main():
     # Paso 5: Configuración de Husky manual
     print("Configurando Husky para habilitar los hooks...")
     # Inicializar Husky
-    subprocess.run(["yarn", "husky", "install"], cwd=target_dir, check=True)
+    subprocess.run(["yarn", "husky", "init"], cwd=target_dir, check=True)
 
     # Crear archivo de hook pre-commit
     pre_commit_path = os.path.join(target_dir, ".husky", "pre-commit")
