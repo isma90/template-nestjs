@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{imageName}}
+spec:
+  replicas: {{MIN_REPLICA}}
+  selector:
+    matchLabels:
+      app: {{imageName}}
+  template:
+    metadata:
+      labels:
+        app: {{imageName}}
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{imageName}}
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{imageName}}
+      containers:
+        - name: {{imageName}}
+          image: {{ACR_URL}}/{{imageName}}:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{APP_PORT}}
+          env:
+            - name: APP_PORT
+              value: '{{APP_PORT}}'
+          resources:
+            requests:
+              cpu: {{CPU_REQUEST}}
+              memory: {{MEMORY_REQUEST}}
+            limits:
+              cpu: {{CPU_LIMIT}}
+              memory: {{CPU_LIMIT}}
+          readinessProbe:
+            httpGet:
+              path: {{HEALTH_PATH}}
+              port: {{APP_PORT}}
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            failureThreshold: 2
+          livenessProbe:
+            httpGet:
+              path: {{HEALTH_PATH}}
+              port: {{APP_PORT}}
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{imageName}}-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: {{imageName}}
+  ports:
+    - port: {{APP_PORT}}
+      targetPort: {{APP_PORT}}
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: {{imageName}}
+  name: {{imageName}}-hpa
+spec:
+  maxReplicas: {{MAX_REPLICA}}
+  minReplicas: {{MIN_REPLICA}}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{imageName}}
+  targetCPUUtilizationPercentage: {{TARGET_CPU_UTILIZATION}}

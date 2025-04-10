@@ -1,0 +1,11 @@
+{
+  "author_name": "Ismael Leiva",
+  "description": "A NestJS project template",
+  "license": "MIT",
+  "project_name": "My NestJS Project",
+  "project_slug": "{{ cookiecutter.project_name|lower|replace(' ', '_') }}",
+  "version": "0.1.0",
+  "_copy_without_render": [
+    "deploy/definition.yaml"
+  ]
+}
