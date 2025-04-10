@@ -9,9 +9,8 @@ def main():
     package_json_path = os.path.join(target_dir, "package.json")
 
     # Paso 1: Asegurarse de que el archivo package.json existe
-    if not os.path.exists(package_json_path):
-        print(f"Error: No se encontró el archivo package.json en {package_json_path}.")
-        return
+    if os.path.exists(os.path.join(target_dir, "package.json.jinja2")):
+        os.rename("package.json.jinja2", "package.json")
 
     # Paso 2: Instalar las dependencias del proyecto
     print("Instalando dependencias iniciales del proyecto...")

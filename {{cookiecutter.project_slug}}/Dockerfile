@@ -4,7 +4,7 @@ ENV PRISMA_CLIENT_ENGINE_TYPE='binary'
 
 WORKDIR /app
 
-COPY ./package.json ./package.json
+COPY package.json.jinja2 ./package.json
 COPY ./dist ./dist
 COPY ./node_modules ./node_modules
 
